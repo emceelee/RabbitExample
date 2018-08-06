@@ -14,8 +14,9 @@ namespace NewTask
             {
                 using (var channel = connection.CreateModel())
                 {
+                    //Durable queue - Rabbit won't lose queue if Rabbit crashes
                     channel.QueueDeclare(queue: "task_queue",
-                                        durable: false,
+                                        durable: true,
                                         exclusive: false,
                                         autoDelete: false,
                                         arguments: null);
@@ -31,6 +32,8 @@ namespace NewTask
                             routingKey: "task_queue",
                             basicProperties: properties,
                             body: body);
+
+                        Console.WriteLine(" [x] Sent {0}", message);
                     }
                 }
             }
